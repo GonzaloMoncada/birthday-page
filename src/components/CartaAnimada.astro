@@ -1,0 +1,62 @@
+<div id="cuadro" class="cuadro w-32 h-24 bg-white rounded-xl relative">
+    <!-- Triángulo blanco (la tapa del sobre) -->
+    <div
+        id="triangulo"
+        class="absolute z-0 -top-[88px] left-1/2 -translate-x-1/2
+                      w-0 h-0
+                      border-l-[127px] border-l-transparent
+                      border-r-[127px] border-r-transparent
+                      border-b-[96px] border-b-white
+                      hidden"
+    >
+    </div>
+    <div id="sobre" class="">
+        <!-- Triángulo grande negro -->
+        <div
+            class="absolute top-[1px] left-1/2 -translate-x-1/2 w-0 h-0
+    border-l-[58px] border-l-transparent
+    border-r-[58px] border-r-transparent
+    border-t-[48px] border-t-gray-400 z-10"
+        >
+        </div>
+
+        <!-- Triángulo pequeño blanco (del color de fondo) para crear el hueco) -->
+        <div
+            class="absolute top-[1px] left-1/2 -translate-x-1/2 w-0 h-0
+    border-l-[57px] border-l-transparent
+    border-r-[57px] border-r-transparent
+    border-t-[47px] border-t-white z-20"
+        >
+        </div>
+    </div>
+</div>
+
+<style>
+    .cuadro {
+        transform: translateY(0);
+        transition:
+            transform 0.25s ease,
+            width 0.25s ease,
+            height 0.25s ease,
+            border-radius 0.25s ease;
+    }
+
+    .cuadro.expandido-parcial {
+        width: 256px;
+        height: 192px;
+        transform: translateY(15vh);
+    }
+
+    .cuadro.expandido-completo-parcial {
+        width: 50vw;
+        height: 30vh;
+        transform: translateY(50vh);
+        border-radius: 0;
+    }
+    .cuadro.expandido-completo {
+        width: 100vw;
+        height: 100vh;
+        transform: translateY(80vh);
+        border-radius: 0;
+    }
+</style>

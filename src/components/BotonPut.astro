@@ -1,0 +1,35 @@
+---
+// recibir props
+const { id } = Astro.props;
+---
+
+<div class="mt-25 py-4">
+    <button
+        id="confirmarBtn"
+        data-id={id}
+        class="rounded-md bg-[#5c7866] py-4 px-6 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg active:bg-[#486151] hover:bg-[#486151] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none ml-2"
+        type="button">Confirmar Asistencia</button
+    >
+</div>
+<script>
+    const btn = document.getElementById("confirmarBtn");
+    if (btn) {
+        const idInvitado = btn.dataset.id;
+        btn.addEventListener("click", async () => {
+            try {
+                const response = await fetch(
+                    `https://gonzalomoncada.uno/api/cumple/invitados/${idInvitado}/confirmar`,
+                    {
+                        method: "PUT",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({ confirmado: true }),
+                    },
+                );
+            } catch (error) {
+                console.error("Error:", error);
+            }
+        });
+    }
+</script>

@@ -1,0 +1,58 @@
+<div
+    class="text-2xl target mt-[-20px] text-white fade-in-slide-up bg-[#5c7866] w-[80%] md:w-[60%] h-25 flex flex-col justify-center gap-2 items-center"
+>
+    <div
+        class="flex w-full "
+        style="font-family: 'Pacifico', cursive;"
+    >
+        <span id="dias" class="w-[25%] text-center">00</span>
+        <span id="horas" class="w-[25%] text-center">00</span>
+        <span id="minutos" class="w-[25%] text-center">00</span>
+        <span id="segundos" class="w-[25%] text-center">00</span>
+    </div>
+    <div class="flex w-full text-lg">
+        <span class="w-[25%] text-center">Dias</span>
+        <span class="w-[25%] text-center">Horas</span>
+        <span class="w-[25%] text-center">Minutos</span>
+        <span class="w-[25%] text-center">Segundos</span>
+    </div>
+</div>
+<script is:inline>
+    const fechaObjetivo = new Date("2025-05-11T12:00:00");
+
+    const spanDias = document.getElementById("dias");
+    const spanHoras = document.getElementById("horas");
+    const spanMinutos = document.getElementById("minutos");
+    const spanSegundos = document.getElementById("segundos");
+
+    function pad(num) {
+        return String(num).padStart(2, "0");
+    }
+
+    function actualizarCuenta() {
+        const ahora = new Date();
+        const diferencia = fechaObjetivo - ahora;
+
+        if (diferencia <= 0) {
+            spanDias.textContent = "00";
+            spanHoras.textContent = "00";
+            spanMinutos.textContent = "00";
+            spanSegundos.textContent = "00";
+            clearInterval(intervalo);
+            return;
+        }
+
+        const dias = Math.floor(diferencia / (1000 * 60 * 60 * 24));
+        const horas = Math.floor((diferencia / (1000 * 60 * 60)) % 24);
+        const minutos = Math.floor((diferencia / (1000 * 60)) % 60);
+        const segundos = Math.floor((diferencia / 1000) % 60);
+
+        spanDias.textContent = pad(dias);
+        spanHoras.textContent = pad(horas);
+        spanMinutos.textContent = pad(minutos);
+        spanSegundos.textContent = pad(segundos);
+    }
+
+    const intervalo = setInterval(actualizarCuenta, 1000);
+    actualizarCuenta();
+</script>

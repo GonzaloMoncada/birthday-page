@@ -1,0 +1,214 @@
+---
+import BotonPut from "../../components/BotonPut.astro";
+import Secciones from "../../components/Secciones.astro";
+import RelojCard from "../../components/RelojCard.astro";
+import Layout from "../../layouts/Layout.astro";
+import CartaAnimada from "../../components/CartaAnimada.astro";
+import { getInvitados, getInvitadosById,  } from "../../services/invitaciones";
+const { id } = Astro.params;
+const data = await getInvitadosById({id});
+export async function getStaticPaths() {
+    const data = await getInvitados();
+    return data.map((datas) => {
+        return {
+            params: { id: datas.hashed_id },
+        };
+    });
+}
+---
+
+<Layout>
+    <main class="group min-h-[300vh] w-screen bg-white relative">
+        <!-- Sección fija con el cuadro -->
+        <div
+            class=`sticky top-0 h-[125vh] flex items-center justify-center bg-[url('/mardel1.jpg')] bg-cover bg-center z-10`
+        >
+            <div
+                class="absolute z-10 text-center text-5xl top-[25vh] flex flex-col gap-4 text-white"
+                style="font-family: 'Pacifico', cursive;"
+            >
+                <span>Desliza hacia abajo para abrir tu invitacion</span> 👇
+            </div>
+            <CartaAnimada/>
+        </div>
+
+        <!-- Contenido principal -->
+        <section
+            id="principal"
+            class="opacity-0 transition-opacity duration-500 min-h-[150vh] bg-white z-20 relative"
+        >
+                    
+            <div class="w-full flex items-center flex-col gap-25 justify-center px-8">
+                <Secciones
+                    linea1="Cumpleaños"
+                    linea2="Juan Pablo"
+                    linea3="11 de Mayo, 2025 12:30 AM⌚"
+                    imgsrc="/imagen1.jpg"
+                />
+                <Secciones
+                    linea1="Los esperamos en"
+                    linea2="Calle 1234, Ciudad"
+                    linea3="Traer su plato y bebida"
+                    imgsrc="/imagen3.jpg"
+                />
+                <div class="w-full flex items-center flex-col">
+                    <img src="/imagen2.jpg" alt="img3" class="w-full md:w-[40vw]"/>
+                    <RelojCard/>
+                </div>
+                
+                <div
+                    class="flex flex-col text-center text-lg text-[#81bbc3] mt-25 gap-2"
+                >
+                    <span style="font-family: 'Pacifico', cursive;"
+                        >¡Traer bebidas, platos, cubiertos y muchas ganas de
+                        pasarla bien!! 🎉🥳</span
+                    >
+                    <span class="font-bold">-Juan</span>
+                    <div>Para: <span>{data.nombre}</span></div>
+                </div>
+                <BotonPut id={data.id} />
+            </div>
+        </section>
+    </main>
+    <div class="absolute z-1 top-[0vh]">
+        <!-- Primer trigger: bien arriba del todo -->
+        <div class="trigger-inicio h-[1px] w-full absolute top-0"></div>
+        <!-- Segundo trigger: al fondo -->
+        <div class="trigger-mid h-[1px] w-full mt-[5vh] absolute top-[120vh]">
+        </div>
+        <!-- Tercer trigger: al fondo -->
+        <div class="trigger-fin h-[1px] w-full mb-[0vh] absolute top-[140vh]">
+        </div>
+    </div>
+    <script is:inline>
+        const cuadro = document.getElementById("cuadro");
+        const triangulo = document.getElementById("triangulo");
+        const triggerInicio = document.querySelector(".trigger-inicio");
+        const triggerMid = document.querySelector(".trigger-mid");
+        const triggerFin = document.querySelector(".trigger-fin");
+        const principal = document.getElementById("principal");
+        const sobre = document.getElementById("sobre");
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    const isInicio =
+                        entry.target.classList.contains("trigger-inicio");
+                    const isFin =
+                        entry.target.classList.contains("trigger-fin");
+                    const isMid =
+                        entry.target.classList.contains("trigger-mid");
+
+                    if (isInicio && !entry.isIntersecting) {
+                        // Cuando el trigger de inicio desaparece del top
+                        sobre.classList.add("hidden");
+                        cuadro.classList.add("expandido-parcial");
+                        setTimeout(() => {
+                            triangulo.classList.remove("hidden");
+                        }, 150);
+                    }
+                    if (isInicio && entry.isIntersecting) {
+                        // Si el trigger de inicio vuelve a verse, reseteamos todo
+                        cuadro.classList.remove(
+                            "expandido-parcial",
+                            "expandido-completo-parcial",
+                        );
+                        triangulo.classList.add("hidden");
+                        sobre.classList.remove("hidden");
+                    }
+                    if (isMid && entry.isIntersecting) {
+                        // Cuando el trigger final entra en pantalla
+                        cuadro.classList.add("expandido-completo-parcial");
+                        setTimeout(() => {
+                            triangulo.classList.add("triangulo-completo");
+                            triangulo.classList.remove("border-l-[127px]");
+                            triangulo.classList.remove("border-r-[127px]");
+                            triangulo.classList.remove("border-b-[96px]");
+                            triangulo.classList.remove("-top-[88px]");
+
+                            triangulo.classList.add("border-l-[25vw]");
+                            triangulo.classList.add("border-r-[25vw]");
+                            triangulo.classList.add("border-b-[128px]");
+                            triangulo.classList.add("-top-[128px]");
+                        }, 80);
+                    }
+
+                    if (isMid && !entry.isIntersecting) {
+                        // Si se va de vista el trigger final, volvemos a estado parcial
+                        cuadro.classList.remove("expandido-completo");
+                        triangulo.classList.remove("border-l-[50vh]");
+                        triangulo.classList.remove("border-r-[50vh]");
+                        triangulo.classList.remove("border-b-[128px]");
+                        triangulo.classList.remove("-top-[128px]");
+                        triangulo.classList.add("border-l-[127px]");
+                        triangulo.classList.add("border-r-[127px]");
+                        triangulo.classList.add("border-b-[96px]");
+                        triangulo.classList.add("-top-[88px]");
+                    }
+                    if (isFin && entry.isIntersecting) {
+                        // Cuando el trigger final entra en pantalla
+                        cuadro.classList.add("expandido-completo");
+                        triangulo.classList.add("hidden");
+                        principal.classList.remove("opacity-0");
+                        principal.classList.add("opacity-100");
+                    }
+
+                    if (isFin && !entry.isIntersecting) {
+                        // Si se va de vista el trigger final, volvemos a estado parcial
+                        cuadro.classList.remove("expandido");
+                        triangulo.classList.remove("opacidad-100");
+                        principal.classList.add("opacity-0");
+                        principal.classList.add("fade-in-slide-out");
+                    }
+                });
+            },
+            {
+                threshold: 0.1,
+            },
+        );
+
+        observer.observe(triggerInicio);
+        observer.observe(triggerMid);
+        observer.observe(triggerFin);
+    </script>
+    <script>
+        const targets = document.querySelectorAll(".target");
+        if (targets.length > 0) {
+            const observer = new IntersectionObserver(
+                (entries) => {
+                    entries.forEach((entry) => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add("visible");
+                        }
+                    });
+                },
+                { threshold: 0.1 },
+            );
+
+            targets.forEach((target) => observer.observe(target));
+        }
+    </script>
+    <style>
+        @keyframes fadeInSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-slide-up {
+            opacity: 0;
+            transform: translateY(20px);
+            transition:
+                opacity 0.3s ease,
+                transform 0.3s ease;
+        }
+
+        .fade-in-slide-up.visible {
+            animation: fadeInSlideUp 0.6s ease-out forwards;
+        }
+    </style>
+</Layout>

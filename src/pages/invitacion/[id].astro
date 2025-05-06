@@ -7,11 +7,12 @@ import CartaAnimada from "../../components/CartaAnimada.astro";
 import { getInvitados, getInvitadosById,  } from "../../services/invitaciones";
 const { id } = Astro.params;
 const data = await getInvitadosById({id});
+
 export async function getStaticPaths() {
-    const data = await getInvitados();
-    return data.map((datas) => {
+    const allInvitados = await getInvitados();
+    return allInvitados.map((invitado) => {
         return {
-            params: { id: datas.hashed_id },
+            params: { id: invitado.hashed_id },
         };
     });
 }
@@ -21,7 +22,7 @@ export async function getStaticPaths() {
     <main class="group min-h-[300vh] w-screen bg-white relative">
         <!-- Sección fija con el cuadro -->
         <div
-            class=`sticky top-0 h-[125vh] flex items-center justify-center bg-[url('/mardel1.jpg')] bg-cover bg-center z-10`
+            class=`sticky top-0 h-[125vh] flex items-center justify-center bg-[url('/background.jpg')] bg-cover bg-center z-10`
         >
             <div
                 class="absolute z-10 text-center text-5xl top-[25vh] flex flex-col gap-4 text-white"

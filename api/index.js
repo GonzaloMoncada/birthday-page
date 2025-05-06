@@ -2,7 +2,9 @@ const express = require('express');
 const mysql = require('mysql2');
 const cors = require('cors');
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
+require('dotenv').config();
+
 
 // Middleware para parsear JSON
 app.use(express.json());
@@ -14,49 +16,41 @@ app.use(cors({
 }));
 
 // Crear conexión a la base de datos
-const connection = mysql.createConnection({
-  host: '192.168.1.10',
-  user: 'root',             // Tu usuario de MySQL
-  password: 'hombre12',      // Tu contraseña
-  database: 'invitaciones' // Poné el nombre correcto de tu base acá
+const pool = mysql.createPool({
+  host: process.env.DB_URL || 'localhost',
+  user: process.env.DB_USER || 'root',
+  password: process.env.DB_PASSWORD || 'root',
+  database: process.env.DB_NAME || 'invitaciones',
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0
 });
 
-// Conectar
-connection.connect((err) => {
+pool.query(`
+  CREATE TABLE IF NOT EXISTS invitados (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(255) NOT NULL,
+    confirmado BOOLEAN NOT NULL DEFAULT FALSE,
+    mensaje_personalizado TEXT,
+    hashed_id VARCHAR(255) UNIQUE
+  )
+`, (err) => {
   if (err) {
-    console.error('Error conectando a la base de datos:', err);
-    return;
+    console.error('Error creando la tabla:', err);
+  } else {
+    console.log('Tabla "invitados" lista.');
   }
-  console.log('Conectado a la base de datos MySQL!');
-
-  // Crear la tabla si no existe
-  const createTableQuery = `
-    CREATE TABLE IF NOT EXISTS invitados (
-      id BIGINT AUTO_INCREMENT PRIMARY KEY,
-      nombre VARCHAR(255) NOT NULL,
-      confirmado BOOLEAN NOT NULL DEFAULT FALSE,
-      mensaje_personalizado TEXT
-    )
-  `;
-
-  connection.query(createTableQuery, (err) => {
-    if (err) {
-      console.error('Error creando la tabla:', err);
-    } else {
-      console.log('Tabla "invitados" lista.');
-    }
-  });
 });
 
 // Crear (POST)
 app.post('/create', (req, res) => {
-  const { nombre, confirmado = false, mensaje_personalizado = null } = req.body;
+  const { nombre, confirmado = false, mensaje_personalizado = null, hashed_id = null } = req.body;
   const query = `
-    INSERT INTO invitados (nombre, confirmado, mensaje_personalizado)
-    VALUES (?, ?, ?)
+    INSERT INTO invitados (nombre, confirmado, mensaje_personalizado, hashed_id)
+    VALUES (?, ?, ?, ?)
   `;
 
-  connection.query(query, [nombre, confirmado, mensaje_personalizado], (err, result) => {
+  pool.query(query, [nombre, confirmado, mensaje_personalizado, hashed_id], (err, result) => {
     if (err) {
       console.error('Error insertando invitado:', err);
       return res.status(500).json({ error: 'Error en la base de datos' });
@@ -66,7 +60,8 @@ app.post('/create', (req, res) => {
       id: result.insertId,
       nombre,
       confirmado,
-      mensaje_personalizado
+      mensaje_personalizado,
+      hashed_id
     });
   });
 });
@@ -74,7 +69,7 @@ app.post('/create', (req, res) => {
 // Leer todos (GET)
 app.get('/invitados', (req, res) => {  
   const query = 'SELECT * FROM invitados';
-  connection.query(query, (err, results) => {
+  pool.query(query, (err, results) => {
     if (err) {
       console.error('Error obteniendo invitados:', err);
       res.status(500).json({ error: 'Error en la base de datos' });
@@ -89,7 +84,7 @@ app.get('/invitados/:id', (req, res) => {
   const id = req.params.id;
   const query = 'SELECT * FROM invitados WHERE hashed_id = ?';
 
-  connection.query(query, [id], (err, results) => {
+  pool.query(query, [id], (err, results) => {
     if (err) {
       console.error('Error obteniendo invitado:', err);
       res.status(500).json({ error: 'Error en la base de datos' });
@@ -112,7 +107,7 @@ app.put('/invitados/:id/confirmar', (req, res) => {
 
   const query = 'UPDATE invitados SET confirmado = ? WHERE id = ?';
 
-  connection.query(query, [confirmado, id], (err, result) => {
+  pool.query(query, [confirmado, id], (err, result) => {
     if (err) {
       console.error('Error actualizando confirmado:', err);
       res.status(500).json({ error: 'Error en la base de datos' });
@@ -130,7 +125,7 @@ app.delete('/invitados/:id', (req, res) => {
   const id = parseInt(req.params.id);
   const query = 'DELETE FROM invitados WHERE id = ?';
 
-  connection.query(query, [id], (err, result) => {
+  pool.query(query, [id], (err, result) => {
     if (err) {
       console.error('Error borrando invitado:', err);
       res.status(500).json({ error: 'Error en la base de datos' });

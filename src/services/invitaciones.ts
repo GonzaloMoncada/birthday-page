@@ -2,7 +2,7 @@ import type { APIInvitacionesResponse } from "../types/api";
 import { API_URL } from "astro:env/server";
 export const getInvitadosById = async ({id} : {id: string}  ) =>{
     const response = await fetch(
-        `${API_URL}/${id}`,
+        `${API_URL}/invitados/${id}`,
         {
             method: "GET",
             headers: {
@@ -15,7 +15,7 @@ export const getInvitadosById = async ({id} : {id: string}  ) =>{
 }
 export const getInvitados = async () => {
     const response = await fetch(
-        `${API_URL}`,
+        `${API_URL}/invitados`,
         {
             method: "GET",
             headers: {

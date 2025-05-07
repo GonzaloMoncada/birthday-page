@@ -2,6 +2,8 @@ const express = require('express');
 const mysql = require('mysql2');
 const cors = require('cors');
 const app = express();
+const bcrypt = require('bcrypt');
+
 const PORT = process.env.PORT || 3000;
 require('dotenv').config();
 
@@ -44,13 +46,25 @@ pool.query(`
 
 // Crear (POST)
 app.post('/create', (req, res) => {
-  const { nombre, confirmado = false, mensaje_personalizado = null, hashed_id = null } = req.body;
+  const { nombre, confirmado = false, mensaje_personalizado = null } = req.body;
   const query = `
     INSERT INTO invitados (nombre, confirmado, mensaje_personalizado, hashed_id)
     VALUES (?, ?, ?, ?)
   `;
+  console.log('llegue');
+  let localhashed_id = null;
+  bcrypt.hash(nombre, 10, (err, hash) => {
+    if (err) {
+      console.error('Error al hashear:', err);
+      return;
+    }
+  
+  localhashed_id = hash;
+  });
 
-  pool.query(query, [nombre, confirmado, mensaje_personalizado, hashed_id], (err, result) => {
+  
+
+  pool.query(query, [nombre, confirmado, mensaje_personalizado, localhashed_id], (err, result) => {
     if (err) {
       console.error('Error insertando invitado:', err);
       return res.status(500).json({ error: 'Error en la base de datos' });
@@ -61,7 +75,7 @@ app.post('/create', (req, res) => {
       nombre,
       confirmado,
       mensaje_personalizado,
-      hashed_id
+      localhashed_id
     });
   });
 });

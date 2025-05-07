@@ -1,9 +1,30 @@
 ---
+import CreateFormInvitaciones from "../components/creacion/CreateFormInvitaciones.astro";
 import Layout from "../layouts/Layout.astro";
-
-//console.dir(data, { depth: null });
+import InfoWithTooltip from "../components/creacion/InfoWithTooltip.astro";
 ---
 
 <Layout>
-  
+  <div class="w-screen flex items-center h-screen bg-[#f1f1f3] justify-center flex-col p-4 font-[Montserrat]">
+    <header class="text-center mt-4 w-full absolute top-[10vh]">
+      <h1 class="font-[Montserrat] font-bold text-3xl text-gray-600">Creacion de Invitaciones</h1>
+      <div class="flex flex-row items-center w-full justify-center gap-2 relative">
+        <h2 class="font-[Montserrat] text-lg font-bold text-red-400">solo en compilacion</h2>
+        <InfoWithTooltip/>
+      </div>
+    </header>
+
+    <main class="min-w-[40vw] bg-[#fff] rounded-lg shadow-md p-4 mt-4">
+      <CreateFormInvitaciones />
+    </main>
+  </div>
 </Layout>
+
+<style>
+  @font-face {
+    font-family: "Montserrat";
+    src: url("/fonts/Montserrat.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+  }
+</style>

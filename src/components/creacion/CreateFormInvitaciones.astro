@@ -1,0 +1,77 @@
+---
+
+---
+
+<form id="formulario" class="p-4 flex flex-col w-full gap-4 items-center">
+    <h1 class="text-2xl font-bold text-gray-700">INVITACION AL EVENTO</h1>
+    <ul class="w-full flex flex-col gap-4">
+        <li class="flex flex-col gap-2 w-full">
+            <label for="nombre" class="text-gray-600">Nombre:</label>
+            <input
+                class="border rounded-md p-2"
+                type="text"
+                name="nombre"
+                id="nombre"
+                placeholder="Juan y familia"
+                required
+            />
+        </li>
+        <li class="flex gap-2 w-full items-center text-gray-600">
+            ¿Esta confirmado? <input
+                type="checkbox"
+                id="confirmado"
+                name="confirmado"
+                value="false"
+                class="w-4 h-4"
+            />
+        </li>
+    </ul>
+    <button
+        type="submit"
+        class="cursor-pointer inline-flex h-12 items-center justify-center rounded-md bg-neutral-950 px-6 font-medium text-neutral-50 shadow-lg shadow-neutral-500/20 transition active:scale-95"
+        >Confirmar</button
+    >
+</form>
+<script>
+    import { PUBLIC_API_URL } from "astro:env/client";
+
+    const API_URL = PUBLIC_API_URL;
+    const form = document.getElementById("formulario");
+    if (form) {
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const nombreInput = document.getElementById(
+                "nombre",
+            ) as HTMLInputElement;
+            const confirmadoInput = document.getElementById(
+                "confirmado",
+            ) as HTMLInputElement;
+            if (!nombreInput || !confirmadoInput) {
+                console.error(
+                    "No se encontraron los elementos del formulario.",
+                );
+                return;
+            }
+            const nombre = nombreInput.value;
+            const confirmado = confirmadoInput.checked ? true : false;
+
+            const data = {
+                nombre,
+                confirmado,
+            };
+            try {
+                const res = await fetch(`${API_URL}/create`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(data),
+                });
+                const result = await res.json();
+                console.log("Respuesta:", result);
+            } catch (err) {
+                console.error("Error al enviar:", err);
+            }
+        });
+    }
+</script>

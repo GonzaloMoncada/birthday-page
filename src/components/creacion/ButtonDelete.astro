@@ -1,0 +1,100 @@
+---
+
+---
+<div id="modal" class="hidden absolute w-screen h-screen bg-black/50 top-0 left-0 flex items-center justify-center z-10">
+    <div class="bg-white w-[40vw] h-[40vh] rounded-lg shadow-md flex flex-col items-center justify-center gap-4 p-4">
+        <h2 class="text-xl font-bold text-gray-600">¿Estas seguro de eliminar?</h2>
+        <p class="text-gray-500">Esta acción no se puede deshacer.</p>
+        <div class="flex flex-row gap-4">
+            <button
+                id="deleteBtn"
+                class="inline-flex h-12 items-center justify-center rounded-md bg-green-500 px-5 font-medium text-neutral-50 shadow-lg shadow-neutral-500/20 transition active:scale-95"
+            >
+                Aceptar
+            </button>
+            <button
+                id="cancelBtn"
+                class="inline-flex h-12 items-center justify-center rounded-md bg-red-500 px-5 font-medium text-neutral-50 shadow-lg shadow-neutral-500/20 transition active:scale-95"
+            >
+                Cancelar
+            </button>
+    </div>
+</div>
+</div>
+<button
+    id="handleModal"
+    class="inline-flex h-12 items-center justify-center rounded-md bg-red-500 px-5 font-medium text-neutral-50 shadow-lg shadow-neutral-500/20 transition active:scale-95"
+>
+    Eliminar
+</button>
+
+<script>
+    import { PUBLIC_API_URL } from "astro:env/client";
+    async function deleteDB() {
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+
+        // Filtrar y obtener solo los checkboxes marcados (checked)
+        const estados = Array.from(checkboxes)
+            .filter((checkbox) => (checkbox as HTMLInputElement).checked) // Filtramos los marcados
+            .map((checkbox) => {
+                const input = checkbox as HTMLInputElement;
+                return {
+                    id: input.id,
+                };
+            });
+
+        // Si no hay checkboxes seleccionados, salir de la función
+        if (estados.length === 0) {
+            console.log("No se seleccionaron checkboxes.");
+            return;
+        }
+        try {
+            const res = await fetch(`${PUBLIC_API_URL}/delete`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(estados),
+            });
+            const result = await res.json();
+            console.log("Respuesta:", result);
+        } catch (err) {
+            console.error("Error al enviar:", err);
+        }
+        //reload the page to see the changes
+        window.location.reload();
+    }
+
+    const btnDelete = document.getElementById("deleteBtn");
+    if (btnDelete) {
+        btnDelete.addEventListener("click", deleteDB);
+    }
+</script>
+<script>
+
+// Filtrar y obtener solo los checkboxes marcados (checked)
+    const btnHandle = document.getElementById("handleModal");
+    if (btnHandle) {
+        btnHandle.addEventListener("click", () => {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            const length = Array.from(checkboxes).filter((checkbox) => (checkbox as HTMLInputElement).checked).length;
+            const modal = document.getElementById("modal");
+            if (modal) {
+                if(length === 0) {
+                    alert(length);
+                    return;
+                }
+                modal.classList.remove("hidden");
+            }
+        });
+    }
+    const cancelBtn = document.getElementById("cancelBtn");
+    if (cancelBtn) {
+        cancelBtn.addEventListener("click", () => {
+            const modal = document.getElementById("modal");
+            if (modal) {
+                modal.classList.add("hidden");
+            }
+        });
+    }
+</script>

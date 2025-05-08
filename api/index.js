@@ -51,7 +51,6 @@ app.post('/create', (req, res) => {
     INSERT INTO invitados (nombre, confirmado, mensaje_personalizado, hashed_id)
     VALUES (?, ?, ?, ?)
   `;
-  console.log('llegue');
   let localhashed_id = null;
   bcrypt.hash(nombre, 10, (err, hash) => {
     if (err) {
@@ -135,21 +134,23 @@ app.put('/invitados/:id/confirmar', (req, res) => {
   });
 });
 // Borrar por ID (DELETE)
-app.delete('/invitados/:id', (req, res) => {
-  const id = parseInt(req.params.id);
-  const query = 'DELETE FROM invitados WHERE id = ?';
+app.delete('/delete', async (req, res) => {
+  const invitados = req.body;  // El cuerpo de la solicitud debe ser un array de objetos con los campos 'id' y 'confirmado'
+  const ids = invitados.map(invitado => parseInt(invitado.id));
+  
+  // Verificamos si hay IDs para eliminar
+  if (ids.length === 0) {
+    return res.status(400).json({ message: "No se seleccionaron invitados para eliminar." });
+  }
+  const query = 'DELETE FROM invitados WHERE id IN (?)';
 
-  pool.query(query, [id], (err, result) => {
+  // Suponiendo que usas un pool o conexión a la base de datos
+  pool.query(query, [ids], (err, result) => { // Usando el estilo de callback tradicional
     if (err) {
-      console.error('Error borrando invitado:', err);
-      res.status(500).json({ error: 'Error en la base de datos' });
-      return;
+      console.error("Error al eliminar invitados:", err);
+      return res.status(500).json({ message: "Hubo un error al eliminar los invitados." });
     }
-    if (result.affectedRows === 0) {
-      res.status(404).json({ error: 'Invitado no encontrado' });
-    } else {
-      res.json({ message: 'Invitado borrado exitosamente' });
-    }
+    res.status(200).json({ message: "Invitados eliminados correctamente." });
   });
 });
 

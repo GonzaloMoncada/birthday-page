@@ -1,0 +1,12 @@
+---
+const { invitado } = Astro.props;
+const { id } = invitado;
+---
+
+<li class="text-xl flex flex-row items-center justify-between p-2 border-b border-gray-300">
+    
+    <span class="w-[40%] flex items-center gap-2"><input type="checkbox" id=`${id}` name=`check${id}` class="w-4 h-4 flex-shrink-0"> <label for="" class="truncate overflow-hidden whitespace-nowrap text-ellipsis">{invitado.nombre}</label></span>
+    <div class="pr-2 flex w-max-[20%]">
+        {invitado.confirmado ? <span class="text-sm text-white font-bold p-2 bg-green-500 rounded-xl">ASISTIRA</span> : <span class="bg-gray-500 text-white text-sm font-bold p-2 rounded-xl">No Confirmado</span>}
+    </div>
+</li>

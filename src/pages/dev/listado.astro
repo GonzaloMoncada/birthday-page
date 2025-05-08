@@ -1,0 +1,38 @@
+---
+import InfoWithTooltip from "../../components/creacion/InfoWithTooltip.astro";
+import Layout from "../../layouts/Layout.astro";
+import { getInvitados } from "../../services/invitaciones";
+import InvitadoRow from "../../components/creacion/InvitadoRow.astro";
+import ButtonDelete from "../../components/creacion/ButtonDelete.astro";
+
+const data = await getInvitados();
+
+---
+<Layout>
+    <div class="w-screen flex items-center h-screen bg-[#f1f1f3] justify-center flex-col p-4">
+        <header class="text-center mb-4 w-full">
+          <h1 class="font-[Montserrat] font-bold text-3xl text-gray-600">Listado de Invitaciones</h1>
+          <div class="flex flex-row items-center w-full justify-center gap-2 relative">
+            <h2 class="font-[Montserrat] text-lg font-bold text-red-400">solo en compilacion</h2>
+            <InfoWithTooltip/>
+          </div>
+        </header>
+    
+        <main class="min-w-[40vw] bg-[#fff] rounded-lg shadow-md p-4 mt-4  flex flex-col gap-2">
+            <div class="flex justify-between items-center p-2">
+                <span class="text-xl font-bold flex flex-row items-center gap-2"><img src="/src/icons/trash-xmark.svg" class="w-4 h-4" alt=""> Nombre</span>
+                <span class="text-xl font-bold w-[20%] text-center">Estado</span>
+            </div>
+            <ul class="flex flex-col max-h-[35vh] overflow-x-auto">
+                
+            {data.map((invitado) => (
+                <InvitadoRow invitado={invitado}/>
+            ))}
+            </ul>
+            <div class="flex py-2 self-end">
+                <ButtonDelete></ButtonDelete>
+            </div>
+        </main>
+        <a href="/dev/create" class="text-cyan-600 mt-4">¿Quieres crear nuevas invitaciones?</a>
+      </div>
+</Layout>

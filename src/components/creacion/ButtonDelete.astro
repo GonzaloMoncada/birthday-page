@@ -1,9 +1,9 @@
 ---
 
 ---
-<div id="modal" class="hidden absolute w-screen h-screen bg-black/50 top-0 left-0 flex items-center justify-center z-10">
-    <div class="bg-white w-[40vw] h-[40vh] rounded-lg shadow-md flex flex-col items-center justify-center gap-4 p-4">
-        <h2 class="text-xl font-bold text-gray-600">¿Estas seguro de eliminar?</h2>
+<div id="modal" class="hidden absolute w-screen h-screen bg-black/50 top-0 left-0 z-10">
+    <div class="bg-white w-[40vw] h-[40vh] rounded-lg shadow-md absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center gap-4 p-4">
+        <h2 class="text-xl font-bold text-gray-600">¿Estás seguro de eliminar?</h2>
         <p class="text-gray-500">Esta acción no se puede deshacer.</p>
         <div class="flex flex-row gap-4">
             <button
@@ -18,9 +18,10 @@
             >
                 Cancelar
             </button>
+        </div>
     </div>
 </div>
-</div>
+
 <button
     id="handleModal"
     class="inline-flex h-12 items-center justify-center rounded-md bg-red-500 px-5 font-medium text-neutral-50 shadow-lg shadow-neutral-500/20 transition active:scale-95"

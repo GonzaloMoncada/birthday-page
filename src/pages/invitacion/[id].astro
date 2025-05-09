@@ -1,9 +1,9 @@
 ---
-import BotonPut from "../../components/BotonPut.astro";
-import Secciones from "../../components/Secciones.astro";
-import RelojCard from "../../components/RelojCard.astro";
+import BotonPut from "../../components/invitaciones/BotonPut.astro";
+import Secciones from "../../components/invitaciones/Secciones.astro";
+import RelojCard from "../../components/invitaciones/RelojCard.astro";
 import Layout from "../../layouts/Layout.astro";
-import CartaAnimada from "../../components/CartaAnimada.astro";
+import CartaAnimada from "../../components/invitaciones/CartaAnimada.astro";
 import { getInvitados, getInvitadosById,  } from "../../services/invitaciones";
 const { id } = Astro.params;
 const data = await getInvitadosById({id});

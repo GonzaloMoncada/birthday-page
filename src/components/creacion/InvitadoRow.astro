@@ -6,7 +6,22 @@ const { id } = invitado;
 <li class="text-xl flex flex-row items-center justify-between p-2 border-b border-gray-300">
     
     <span class="w-[40%] flex items-center gap-2"><input type="checkbox" id=`${id}` name=`check${id}` class="w-4 h-4 flex-shrink-0"> <label for="" class="truncate overflow-hidden whitespace-nowrap text-ellipsis">{invitado.nombre}</label></span>
-    <div class="pr-2 flex w-max-[20%]">
+    <div class="flex w-max-[20%] flex-row items-center gap-2">
         {invitado.confirmado ? <span class="text-sm text-white font-bold p-2 bg-green-500 rounded-xl">ASISTIRA</span> : <span class="bg-gray-500 text-white text-sm font-bold p-2 rounded-xl">No Confirmado</span>}
+        <button btn-hash={invitado.hashed_id} class="copy-button cursor-pointer"><img src="/src/icons/link.svg" class="h-4 w-4" alt=""></button>
     </div>
 </li>
+<script>
+  document.querySelectorAll('.copy-button').forEach(button => {
+    button.addEventListener('click', () => {
+      const hash = button.getAttribute('btn-hash');
+      const link = window.location.origin + '/invitacion/' + hash;
+      navigator.clipboard.writeText(link).then(() => {
+        alert('Enlace copiado al portapapeles: ');
+      }).catch(err => {
+        console.error('Error al copiar el enlace: ', err);
+      });
+    });
+  });
+</script>
+

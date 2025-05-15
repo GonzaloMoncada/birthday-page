@@ -28,9 +28,13 @@ Iniciar la API
 │   └── index.js
 ```
 Necesitaras un .env con las creedenciales
-```json
+```.env
 {
-	
+	PORT="3000"
+	DB_URL="localhost"
+	DB_USER="root"
+	DB_PASSWORD="1234"
+	DB_NAME="invitaciones"
 }
 ```
 Despues inicias el servidor en modo de desarrollo. En la raiz del proyecto:
@@ -40,7 +44,8 @@ npm run dev
 El servidor necesita un .env con las creedenciales
 ```json
 {
-	
+	API_URL="http://localhost:3000"
+	PUBLIC_API_URL="http://localhost:3000"
 }
 ```
 y luego vas a la ruta http://localhost:4321/dev/create. Una vez creas las invitaciones debes renombrar la carpeta /page/dev a /page/_dev/ para que al momento de hacer

@@ -3,7 +3,8 @@
 import CreateFormInvitaciones from "../../components/creacion/CreateFormInvitaciones.astro";
 import Layout from "../../layouts/Layout.astro";
 import InfoWithTooltip from "../../components/creacion/InfoWithTooltip.astro";
-import Notify from "../../components/creacion/Notify.astro";
+import Notification from "../../components/creacion/Notification.astro";
+
 ---
 
 <Layout>
@@ -20,8 +21,8 @@ import Notify from "../../components/creacion/Notify.astro";
       <CreateFormInvitaciones />
     </main>
     <a href="/dev/listado" class="text-cyan-600 mt-4">¿Quieres ver todas las invitaciones?</a>
-    <Notify type="success"/>
-    <Notify type="error"/>
+    <Notification type="success"/>
+    <Notification type="error"/>
   </div>
 </Layout>
 

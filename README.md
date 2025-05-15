@@ -42,7 +42,7 @@ Despues inicias el servidor en modo de desarrollo. En la raiz del proyecto:
 npm run dev
 ```
 El servidor necesita un .env con las creedenciales
-```json
+```.env
 {
 	API_URL="http://localhost:3000"
 	PUBLIC_API_URL="http://localhost:3000"

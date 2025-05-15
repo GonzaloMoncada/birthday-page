@@ -16,8 +16,8 @@ Este proyecto está diseñado para la creación de páginas de eventos, permitie
 <img src="/imagenes/invitacion2.png">
 <img src="/imagenes/invitacion3.png">
 </div>
-![Create](/imagenes/create.png)
-![List](/imagenes/listado.png)
+<img src="./imagenes/listado.png"> 
+<img src="./imagenes/create.png"> 
 
 ## Instalacion
 Iniciar la API

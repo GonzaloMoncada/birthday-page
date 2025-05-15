@@ -4,6 +4,7 @@ import Layout from "../../layouts/Layout.astro";
 import { getInvitados } from "../../services/invitaciones";
 import InvitadoRow from "../../components/creacion/InvitadoRow.astro";
 import ButtonDelete from "../../components/creacion/ButtonDelete.astro";
+import Notify from "../../components/creacion/Notify.astro";
 
 const data = await getInvitados();
 
@@ -29,7 +30,8 @@ const data = await getInvitados();
                 <InvitadoRow invitado={invitado}/>
             ))}
             </ul>
-            <div class="flex py-2 self-end">
+            <div class="flex py-2 w-full items-start justify-between">
+              <span id="avisoText" class="opacity-0 transition-opacity duration-200 text-center text-xs font-bold text-red-500">* Ninguna invitacion seleccionada</span>
                 <ButtonDelete></ButtonDelete>
             </div>
         </main>

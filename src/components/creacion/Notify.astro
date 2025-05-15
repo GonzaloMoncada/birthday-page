@@ -1,0 +1,61 @@
+---
+const { type } = Astro.props;
+const icon = type === "success" ? "✅" : "❌";
+---
+
+<style>
+    .slide-in {
+        transform: translateX(2.5rem); /* equivalente a translate-x-10 */
+    }
+    .slide-in-final {
+        transform: translateX(0);
+        transition: transform 0.1s ease-out;
+    }
+    .slide-out {
+        transform: translateX(-0.5rem); /* pequeño movimiento hacia la izquierda */
+        transition: transform 0.1s ease-in;
+    }
+</style>
+
+<div
+    id={`notify${type}`}
+    class="hidden absolute bottom-0 right-0 bg-white shadow-sm rounded-lg py-5 px-3 w-75 m-10 text-gray-500 text-xl"
+>
+    <button class="absolute top-0 right-0 m-2 cursor-pointer">
+        <img src="/src/icons/close.svg" class="w-4 h-4" alt="" />
+    </button>
+    {icon}<span class="text-sm"> Invitation created successfully!</span>
+</div>
+
+<script>
+    const notifySucess = document.getElementById("notify" + "success");
+    if (notifySucess) {
+        // Al mostrar el elemento
+        const btnClose = notifySucess?.querySelector("button");
+        btnClose?.addEventListener("click", () => {
+            notifySucess.classList.remove("slide-in-final");
+            notifySucess.classList.add("slide-out");
+            
+            // Esperar a que termine la animación antes de ocultar
+            setTimeout(() => {
+                notifySucess.classList.add("hidden");
+                notifySucess.classList.remove("slide-out");
+            }, 150); // mismo tiempo que la transición
+        });
+    }
+    const notifyError = document.getElementById("notify" + "error");
+    if (notifyError) {
+        // Al mostrar el elemento
+        const btnClose = notifyError?.querySelector("button");
+        btnClose?.addEventListener("click", () => {
+            notifyError.classList.remove("slide-in-final");
+            notifyError.classList.add("slide-out");
+            
+            // Esperar a que termine la animación antes de ocultar
+            setTimeout(() => {
+                notifyError.classList.add("hidden");
+                notifyError.classList.remove("slide-out");
+            }, 150); // mismo tiempo que la transición
+        });
+    }
+</script>

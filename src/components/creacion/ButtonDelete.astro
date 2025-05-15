@@ -82,9 +82,10 @@
             const modal = document.getElementById("modal");
             if (modal) {
                 if(length === 0) {
-                    alert(length);
+                    document.getElementById("avisoText")?.classList.remove("opacity-0");
                     return;
                 }
+                document.getElementById("avisoText")?.classList.add("opacity-0");
                 modal.classList.remove("hidden");
             }
         });

@@ -17,7 +17,7 @@ const { id } = invitado;
       const hash = button.getAttribute('btn-hash');
       const link = window.location.origin + '/invitacion/' + hash;
       navigator.clipboard.writeText(link).then(() => {
-        alert('Enlace copiado al portapapeles: ');
+        alert('Enlace copiado al portapapeles');
       }).catch(err => {
         console.error('Error al copiar el enlace: ', err);
       });

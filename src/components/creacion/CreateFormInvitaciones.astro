@@ -32,6 +32,7 @@
         >Confirmar</button
     >
 </form>
+
 <script>
     import { PUBLIC_API_URL } from "astro:env/client";
 
@@ -68,10 +69,52 @@
                     body: JSON.stringify(data),
                 });
                 const result = await res.json();
+                nombreInput.value = "";
+                const notifySuccess = document.getElementById("notifysuccess");
+                if (notifySuccess) {
+                    notifySuccess.classList.remove("hidden");
+                    // Reset animaciones previas
+                    notifySuccess.classList.remove("slide-out");
+                    notifySuccess.classList.add("slide-in");
+
+                    // Pequeño timeout para forzar reflow y permitir animación
+                    requestAnimationFrame(() => {
+                        notifySuccess.classList.remove("slide-in");
+                        notifySuccess.classList.add("slide-in-final");
+                    });
+                    closeNotify("success");
+                }
                 console.log("Respuesta:", result);
             } catch (err) {
+                const notifyError = document.getElementById("notifyerror");
+                if (notifyError) {
+                    notifyError.classList.remove("hidden");
+                    // Reset animaciones previas
+                    notifyError.classList.remove("slide-out");
+                    notifyError.classList.add("slide-in");
+
+                    // Pequeño timeout para forzar reflow y permitir animación
+                    requestAnimationFrame(() => {
+                        notifyError.classList.remove("slide-in");
+                        notifyError.classList.add("slide-in-final");
+                    });
+                    closeNotify("error");
+                }
                 console.error("Error al enviar:", err);
             }
         });
+    }
+    function closeNotify(type: string) {
+        const id = "notify" + type;
+        const notify = document.getElementById(id);
+        if (!notify) return;
+        setTimeout(() => {
+            notify.classList.remove("slide-in-final");
+            notify.classList.add("slide-out");
+            setTimeout(() => {
+                notify.classList.add("hidden");
+                notify.classList.remove("slide-out");
+            }, 150);
+        }, 2000);
     }
 </script>

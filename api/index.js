@@ -45,39 +45,38 @@ pool.query(`
 });
 
 // Crear (POST)
-app.post('/create', (req, res) => {
-  const { nombre, confirmado = false, mensaje_personalizado = null } = req.body;
-  const query = `
-    INSERT INTO invitados (nombre, confirmado, mensaje_personalizado, hashed_id)
-    VALUES (?, ?, ?, ?)
-  `;
-  let localhashed_id = null;
-  bcrypt.hash(nombre, 10, (err, hash) => {
-    if (err) {
-      console.error('Error al hashear:', err);
-      return;
-    }
-  
-  localhashed_id = hash;
-  });
+app.post('/create', async (req, res) => {
+  try {
+    const { nombre, confirmado = false, mensaje_personalizado = null } = req.body;
 
-  
+    // Esperar el hash del nombre
+    const hashed_id = await bcrypt.hash(nombre, 10);
 
-  pool.query(query, [nombre, confirmado, mensaje_personalizado, localhashed_id], (err, result) => {
-    if (err) {
-      console.error('Error insertando invitado:', err);
-      return res.status(500).json({ error: 'Error en la base de datos' });
-    }
-
-    res.status(201).json({
-      id: result.insertId,
-      nombre,
-      confirmado,
-      mensaje_personalizado,
-      localhashed_id
+    const query = `
+      INSERT INTO invitados (nombre, confirmado, mensaje_personalizado, hashed_id)
+      VALUES (?, ?, ?, ?)
+    `;
+    
+    // Ejecutar la consulta con el hash ya disponible
+    pool.query(query, [nombre, confirmado, mensaje_personalizado, hashed_id], (err, result) => {
+      if (err) {
+        console.error('Error insertando invitado:', err);
+        return res.status(500).json({ error: 'Error en la base de datos' });
+      }
+      res.status(201).json({
+        id: result.insertId,
+        nombre,
+        confirmado,
+        mensaje_personalizado,
+        hashed_id,
+      });
     });
-  });
+  } catch (error) {
+    console.error('Error en la petición:', error);
+    res.status(500).json({ error: 'Error en el servidor' });
+  }
 });
+
 
 // Leer todos (GET)
 app.get('/invitados', (req, res) => {  

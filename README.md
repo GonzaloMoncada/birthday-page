@@ -1,7 +1,7 @@
 # CREADOR DE INVITACIONES PARA EVENTOS
 <div style="display: flex; gap:2px">
 <a href="https://astro.build/">
-  <img src="https://raw.githubusercontent.com/github/explore/5cc0a03a302ec862c4aeac2a22a513ae31c35432/topics/astro/astro.png" alt="Astro" width="50"/>
+  <img src="https://yt3.googleusercontent.com/8aWv8A1zanF_R80egpVs-JOQ0j1yN27mPMtWjkBxe2VWTNJMLcmeCJfGMMYmubQ734C0PxsqHA=s900-c-k-c0x00ffffff-no-rj" alt="Astro" width="50"/>
 </a>
 <a href="https://nodesource.com/products/nsolid">
   <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTSDKn3vA2YUbXzN0ZC3gALWJ08gJN-Drl15w&s" alt="Astro" width="50"/>
